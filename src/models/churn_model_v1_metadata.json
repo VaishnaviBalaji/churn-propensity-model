@@ -1,0 +1,68 @@
+{
+  "model_version": "v1.0",
+  "trained_date": "2024-04-03",
+  "features": [
+    "tenure",
+    "gender_male",
+    "is_senior",
+    "has_partner",
+    "has_dependents",
+    "contract_type",
+    "paperless_billing",
+    "payment_method",
+    "monthly_charges",
+    "has_phone",
+    "multiple_lines",
+    "internet_service",
+    "has_online_security",
+    "has_tech_support",
+    "has_online_backup",
+    "has_device_protection",
+    "has_streaming_tv",
+    "has_streaming_movies",
+    "bundle_depth"
+  ],
+  "categorical_features": [
+    "contract_type",
+    "payment_method",
+    "internet_service"
+  ],
+  "bucket_thresholds": {
+    "day0": [
+      0.0803,
+      0.0941,
+      0.1189
+    ],
+    "new": [
+      0.4693,
+      0.7871,
+      0.9059
+    ],
+    "old": [
+      0.0449,
+      0.3184,
+      0.648
+    ]
+  },
+  "bucket_labels": [
+    "low",
+    "medium",
+    "high",
+    "critical"
+  ],
+  "metrics": {
+    "roc_auc": 0.827,
+    "pr_auc": 0.6043,
+    "churn_recall": 0.79,
+    "churn_precision": 0.48,
+    "top_decile_churn_rate": 0.688,
+    "top_30pct_coverage": 0.655
+  },
+  "scale_pos_weight": 2.719,
+  "training_data": {
+    "total_rows": 7043,
+    "churn_rate": 0.2654,
+    "train_size": 5634,
+    "test_size": 1409
+  }
+}

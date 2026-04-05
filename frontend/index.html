@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Churn Propensity Predictor</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #333;
+    }
+    h1 { font-size: 1.4rem; margin-bottom: 4px; }
+    p.subtitle { color: #666; margin-top: 0; margin-bottom: 24px; font-size: 0.9rem; }
+    label { display: block; margin-top: 12px; font-size: 0.9rem; font-weight: bold; }
+    input, select {
+      width: 100%;
+      padding: 7px 10px;
+      margin-top: 4px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 24px;
+      padding: 10px 24px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    button:hover { background: #1d4ed8; }
+    #result {
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 4px;
+      display: none;
+    }
+    .low      { background: #d1fae5; border-left: 4px solid #10b981; }
+    .medium   { background: #fef9c3; border-left: 4px solid #f59e0b; }
+    .high     { background: #fee2e2; border-left: 4px solid #ef4444; }
+    .critical { background: #fce7f3; border-left: 4px solid #db2777; }
+    #result h2 { margin: 0 0 8px; font-size: 1rem; }
+    #result p  { margin: 4px 0; font-size: 0.9rem; }
+    .error { background: #fee2e2; border-left: 4px solid #ef4444; }
+  </style>
+</head>
+<body>
+
+  <h1>Churn Propensity Predictor</h1>
+  <p class="subtitle">Enter customer details to predict churn risk.</p>
+
+  <form id="form">
+    <label>Tenure (months)
+      <input type="number" name="tenure" value="3" min="0" required>
+    </label>
+
+    <label>Monthly Charges ($)
+      <input type="number" name="monthly_charges" value="70.5" step="0.01" required>
+    </label>
+
+    <label>Contract Type
+      <select name="contract_type">
+        <option>Month-to-month</option>
+        <option>One year</option>
+        <option>Two year</option>
+      </select>
+    </label>
+
+    <label>Internet Service
+      <select name="internet_service">
+        <option>Fiber optic</option>
+        <option>DSL</option>
+        <option>No</option>
+      </select>
+    </label>
+
+    <label>Payment Method
+      <select name="payment_method">
+        <option>Electronic check</option>
+        <option>Mailed check</option>
+        <option>Bank transfer (automatic)</option>
+        <option>Credit card (automatic)</option>
+      </select>
+    </label>
+
+    <label>Gender
+      <select name="gender_male">
+        <option value="1">Male</option>
+        <option value="0">Female</option>
+      </select>
+    </label>
+
+    <label>Senior Citizen
+      <select name="is_senior">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Has Partner
+      <select name="has_partner">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Has Dependents
+      <select name="has_dependents">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Paperless Billing
+      <select name="paperless_billing">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+    </label>
+
+    <label>Phone Service
+      <select name="has_phone">
+        <option value="1">Yes</option>
+        <option value="0">No</option>
+      </select>
+    </label>
+
+    <label>Multiple Lines
+      <select name="multiple_lines">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Online Security
+      <select name="has_online_security">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Tech Support
+      <select name="has_tech_support">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Online Backup
+      <select name="has_online_backup">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Device Protection
+      <select name="has_device_protection">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Streaming TV
+      <select name="has_streaming_tv">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <label>Streaming Movies
+      <select name="has_streaming_movies">
+        <option value="0">No</option>
+        <option value="1">Yes</option>
+      </select>
+    </label>
+
+    <button type="submit">Predict Churn Risk</button>
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    const API = "https://churn-api-844653534188.europe-west2.run.app";
+
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        tenure:               parseInt(form.tenure.value),
+        monthly_charges:      parseFloat(form.monthly_charges.value),
+        contract_type:        form.contract_type.value,
+        internet_service:     form.internet_service.value,
+        payment_method:       form.payment_method.value,
+        gender_male:          parseInt(form.gender_male.value),
+        is_senior:            parseInt(form.is_senior.value),
+        has_partner:          parseInt(form.has_partner.value),
+        has_dependents:       parseInt(form.has_dependents.value),
+        paperless_billing:    parseInt(form.paperless_billing.value),
+        has_phone:            parseInt(form.has_phone.value),
+        multiple_lines:       parseInt(form.multiple_lines.value),
+        has_online_security:  parseInt(form.has_online_security.value),
+        has_tech_support:     parseInt(form.has_tech_support.value),
+        has_online_backup:    parseInt(form.has_online_backup.value),
+        has_device_protection:parseInt(form.has_device_protection.value),
+        has_streaming_tv:     parseInt(form.has_streaming_tv.value),
+        has_streaming_movies: parseInt(form.has_streaming_movies.value),
+        bundle_depth: [
+          "has_online_security", "has_tech_support", "has_online_backup",
+          "has_device_protection", "has_streaming_tv", "has_streaming_movies",
+          "has_phone", "multiple_lines"
+        ].reduce((sum, k) => sum + parseInt(form[k].value), 0)
+      };
+
+      const resultDiv = document.getElementById("result");
+      resultDiv.style.display = "none";
+
+      try {
+        const res = await fetch(`${API}/predict`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        resultDiv.className = json.bucket;
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `
+          <h2>Churn Risk: <strong>${json.bucket.toUpperCase()}</strong></h2>
+          <p>Propensity Score: <strong>${json.churn_propensity_score}</strong></p>
+          <p>Tenure Segment: ${json.tenure_segment}</p>
+          <p>Model Version: ${json.model_version}</p>
+        `;
+      } catch (err) {
+        resultDiv.className = "error";
+        resultDiv.style.display = "block";
+        resultDiv.innerHTML = `<h2>Error</h2><p>${err.message}</p>`;
+      }
+    });
+  </script>
+
+</body>
+</html>
