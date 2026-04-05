@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import xgboost as xgb
 import json
@@ -14,6 +15,13 @@ app = FastAPI(
     title="Churn Propensity API",
     description="Predicts customer churn probability and risk bucket",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://vaishnavibalaji.github.io"],
+    allow_methods=["POST", "GET"],
+    allow_headers=["Content-Type"],
 )
 
 # Load model and metadata on startup
