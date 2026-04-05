@@ -29,19 +29,19 @@
   ],
   "bucket_thresholds": {
     "day0": [
-      0.0803,
-      0.0941,
-      0.1189
+      0.0664,
+      0.0842,
+      0.1018
     ],
     "new": [
-      0.4693,
-      0.7871,
-      0.9059
+      0.5067,
+      0.7849,
+      0.9008
     ],
     "old": [
-      0.0449,
-      0.3184,
-      0.648
+      0.0515,
+      0.3058,
+      0.6419
     ]
   },
   "bucket_labels": [
@@ -51,14 +51,14 @@
     "critical"
   ],
   "metrics": {
-    "roc_auc": 0.827,
-    "pr_auc": 0.6043,
+    "roc_auc": 0.8519,
+    "pr_auc": 0.6834,
     "churn_recall": 0.79,
     "churn_precision": 0.48,
     "top_decile_churn_rate": 0.688,
     "top_30pct_coverage": 0.655
   },
-  "scale_pos_weight": 2.719,
+  "scale_pos_weight": 2.764,
   "training_data": {
     "total_rows": 7043,
     "churn_rate": 0.2654,
